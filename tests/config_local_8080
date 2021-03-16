@@ -1,0 +1,28 @@
+# this is for testing in local
+http {
+    # this is a comment
+    server {
+        port 8080;
+        
+        location "/echo" EchoHandler {
+            root "../data/echo_data";
+        }
+
+        location "/static" StaticHandler{
+            root "../data/static_data";
+        }    
+
+        location "/status" StatusHandler{
+        }
+
+        location "/ucla" ReverseProxyHandler{
+            host "www.ucla.edu";
+            host_port 80;
+        }
+        
+        location "/columbia" ReverseProxyHandler{
+            host "www.columbia.edu";
+            host_port 80;
+        }
+    }
+}

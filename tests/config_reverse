@@ -1,0 +1,39 @@
+# this is for deployment
+http {
+    # this is a comment
+    server {
+        port 80;
+        
+        location "/echo" EchoHandler {
+            root "../data/echo_data";
+        }
+
+        location "/static" StaticHandler {
+            root "../data/static_data";
+        }  
+
+        location "/itwc_static" StaticHandler {
+            root "../data/ITWC";
+        }    
+
+        location "/status" StatusHandler{
+        }
+
+        location "/ucla" ReverseProxyHandler{
+            host "www.ucla.edu";
+            host_port 80;
+        }
+        
+        location "/columbia" ReverseProxyHandler{
+            host "www.columbia.edu";
+            host_port 80;
+        }
+
+        location "/health" HealthHandler{
+        }
+
+        location "/itwc" ITWCHandler{
+            root "../data/ITWC";
+        }
+    }
+}

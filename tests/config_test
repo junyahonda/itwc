@@ -1,0 +1,17 @@
+http {
+    # this is a comment
+    server {
+        port 8080;
+        
+        location "/echo" EchoHandler {
+            root "../data/echo_data";
+        }
+
+        location "/static" StaticHandler{
+            root "../data/static_data";
+        }    
+
+        location "/status" StatusHandler{
+        } 
+    }
+}
