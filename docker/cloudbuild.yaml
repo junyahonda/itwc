@@ -1,0 +1,33 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/gerrit-masters:base || exit 0
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-f', 'docker/base.Dockerfile',
+    '-t', 'gerrit-masters:base',
+    '-t', 'gcr.io/$PROJECT_ID/gerrit-masters:base',
+    '--cache-from', 'gcr.io/$PROJECT_ID/gerrit-masters:base',
+    '.'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/gerrit-masters:base']
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-f', 'docker/Dockerfile',
+    '-t', 'gcr.io/$PROJECT_ID/gerrit-masters:latest',
+    '.'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-f', 'docker/coverage.Dockerfile',
+    '-t', 'gcr.io/$PROJECT_ID/gerrit-masters:coverage',
+    '.'
+  ]
+images: ['gcr.io/$PROJECT_ID/gerrit-masters:base', 'gcr.io/$PROJECT_ID/gerrit-masters:latest', 'gcr.io/$PROJECT_ID/gerrit-masters:coverage']
