@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+	<head onload="changeRoundNum()">
+		<title>Main page</title>
+		<h1 class="title" id="ROUND">Ideal Type World cup, Round: 1/16</h1>
+		<h2 class="title"> Click one of the pictures</h2>
+		<link rel="stylesheet" href="../css/main.css">
+	</head>
+	<body onload="loadImage()">
+		<div class="row">
+			<p id="pics" class="col"></p>
+		</div>
+		<button type="button" class="button" onclick="cleanLocalStorage()">Home</button>
+	</body>
+</div>
+<script>
+	var topic = localStorage.getItem("topic");
+	console.log(topic);
+	var txt = "";
+	function readTextFile(file)
+	{
+	    var rawFile = new XMLHttpRequest();
+	    rawFile.open("GET", file, false);
+	    rawFile.onreadystatechange = function ()
+	    {
+	        if(rawFile.readyState === 4)
+	        {
+	            if(rawFile.status === 200 || rawFile.status == 0)
+	            {
+	                var allText = rawFile.responseText;
+	                txt = allText;
+	                console.log(txt);
+	            }
+	        }
+	    }
+	    rawFile.send(null);
+	}
+	
+
+
+	var all_element = [];
+	function appendToList() {
+		var start = 0;
+		for (var i = 0; i < txt.length; i++) {
+			if (txt[i] == '#') {
+				all_element.push(txt.substring(start, i));
+				start = i+1;
+			}
+		}
+		all_element.push(txt.substring(start, txt.length));
+	}
+
+	
+	function makeChoice(option){
+		// when option1 is picked
+		if(option == 'img1'){
+			let temp = all_element[0];  // option1
+			all_element.shift();	    // get rid of the 1st element (option1)
+			all_element.push(temp);		// put the element(option1) at the end of the list
+			all_element.shift();		// get rid of the 1st element (element2)
+		}
+		// when option2 is picked
+		else{
+			all_element.shift();		// option1 will be removed
+			let temp = all_element[0];	// option2 will be kept
+			all_element.push(temp);		// option2 will be pushed at the end of the list
+			all_element.shift();		// first element(option2) will be removed
+		}
+	}
+
+
+	function loadImage() {
+		var text = topic + ".txt";
+		readTextFile("../image_list/"+text);
+		appendToList();
+		var x = document.createElement("IMG");
+		x.setAttribute("src", '../sets/'+all_element[0]);
+		x.setAttribute("width", "100%");
+		x.setAttribute("id","img1");
+		x.setAttribute("onclick", "changeImage(this.id)");
+		x.setAttribute("onmouseover", "");
+		x.setAttribute("style", "cursor: pointer;");
+		x.setAttribute("class", "option")
+
+		var y = document.createElement("IMG");
+		y.setAttribute("src", '../sets/'+all_element[1]);
+		y.setAttribute("width", "100%");
+		y.setAttribute("id","img2");
+		y.setAttribute("onclick", "changeImage(this.id)");
+		y.setAttribute("onmouseover", "");
+		y.setAttribute("style", "cursor: pointer;");
+		y.setAttribute("class", "option")
+
+		document.getElementById("pics").appendChild(x);
+		document.getElementById("pics").appendChild(y)
+	}
+	function changeRoundNum() { 
+		let curr_remain = all_element.length;
+		let nom_val = 0;
+		let denom_val = 0;
+		let inTitle = "";
+		if(curr_remain > 16){
+			denom_val = 16;
+		}
+		else if(curr_remain > 8){
+			denom_val = 8;
+		}
+		else if(curr_remain > 4){
+			denom_val = 4;
+		}
+		else if(curr_remain > 2){
+			denom_val = 2;
+		}
+		else{ 
+			denom_val = 1;
+		}
+		inTitle = (denom_val*2 - curr_remain+1) + "/"+ denom_val;
+	    document.getElementById('ROUND').innerHTML 
+	        = 'Ideal Type World cup, Round: ' + inTitle; 
+    } 
+
+	function changeImage(click_id){
+		console.log(window.location.href);
+		var image1 = document.getElementById('img1');
+		var image2 = document.getElementById('img2');
+		if(click_id == 'img1'){
+			makeChoice(click_id);
+		}
+		if(click_id == 'img2'){
+			makeChoice(click_id);
+		}
+		// this is the function for updating the number of left options.
+		changeRoundNum();
+		// when only one is left.
+		if(all_element.length == 1){
+			// the filename will be saved locally for the next page.
+			localStorage.setItem("file", all_element[0]);
+			window.location.href='lastpick.html'; 
+		}
+		image1.src = '../sets/' + all_element[0];
+		image2.src = '../sets/' + all_element[1];
+	}
+	function cleanLocalStorage(){
+		localStorage.clear();
+		window.location.href='/itwc/'
+	}
+
+
+</script>
+</html>

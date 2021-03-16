@@ -1,0 +1,42 @@
+body {
+	background-color: #2774AE;
+}
+
+.container {
+	margin-top: 15%;	
+	margin-left: 25%;
+	width: 50%;
+	background-color: white;
+	color: #2774AE;
+	padding: 10px;
+	font-family: "calibri", Garamond, 'Comic Sans MS';
+}
+
+.title {
+	margin: auto;
+	font-size: large;
+	text-align: center;
+	border-bottom: 5px solid #2774AE;
+}
+
+.submission {
+	margin: auto;
+	text-align: center;
+	padding-top: 20px;
+}
+
+.button_container {
+	margin: auto;
+	text-align: center;
+}
+
+.buttons {
+	text-align: center;
+	margin: auto;
+	font-size: 20px;
+	padding: 7px;
+	background-color: #2774AE;
+	border: none;
+	color: white;
+	cursor: pointer;
+}

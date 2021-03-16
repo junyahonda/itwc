@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<div class="container">
+<head>
+  <title>Rank Page</title>
+  <h1 class="title">The Others Preference </h1>
+  <link rel="stylesheet" href="css/chart.css">
+</head>
+<body>
+
+<div id="piechart"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript" class="chart">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['Item', 'Count'],
+  ['Apple', 40],
+  ['Banana', 30],
+  ['Strawberry',10],
+  ['Watermelon', 5],
+  ['Lemon', 1]
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {};
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
+
+<button type="button" class="button">Home</button>
+
+</body>
+</html>

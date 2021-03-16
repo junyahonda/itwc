@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+<head>
+    <title>Craete</title>
+    <div class="title">
+        <h1>Create Your Own World Cup</h1>
+    </div>
+    <link rel="stylesheet" href="../css/create.css">
+</head>
+<body>
+    <div class="submission">
+        <form action="create.html" method="post" enctype="multipart/form-data">
+            Select image to upload:
+            <input type="file" name="fileToUpload" multiple id="fileToUpload">
+            <br><label for="text">Name of World Cup: </label>
+            <input type="text" id="set_name" name="set_name" size="31" value="Please Enter Name of the World Cup"><br>
+            <input type="submit" value="Upload Set Images" name="submit">
+        </form>
+    </div>
+    <div class="button_container">
+        <p>
+            <button class="buttons" onclick="window.location.href='/itwc/'">Home</button>
+        </p>
+    </div>
+</body>
+</div>
+<script>
+    function upload() {
+        let formData = new FormData(document.forms.new_data);
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+            }
+        };
+        xhr.upload.onprogress = function(event) {
+            console.log(`Uploaded ${event.loaded} of ${event.total}`);
+        };
+        xhr.onloadend = function() {
+            if (xhr.status == 200) {
+              console.log("success");
+            } else {
+              console.log("error " + this.status);
+            }
+        };
+
+        xhr.open("POST", "../sets/new_temp/", false);
+        xhr.send(formData);
+    }
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script> 
+    $(function(){
+        $("input[type='submit']").click(function(){
+            var $fileUpload = $("input[type='file']");
+            if (parseInt($fileUpload.get(0).files.length)!=32){
+                alert("You can only upload exactly 32 images for Ideal Type World Cup!");
+                return false;
+            }
+        });    
+    });
+</script>
+</html>

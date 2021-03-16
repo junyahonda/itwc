@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+<head>
+	<title>Rank Page</title>
+	<h1  class="title" id="TOPIC"> </h1>
+	<h2 class="title" id="TOTAL" ></h2>
+	<link rel="stylesheet" href="../css/rank.css">
+</head>
+<body onload="loadScores()">
+	<ol id="rank_list">
+	</ol>
+	<p id="message"></p>
+	<p>
+		<button class="button" onclick="window.location.href='/itwc/'" style="margin-left: 44%">Home</button>
+	</p>
+</body>
+</div>
+
+<script type="text/javascript">
+
+
+	var score = new Map();
+	var txt = "";
+	
+	// read the input text files and open it through the GET request to the server
+	function readTxt(file) {
+		var rawFile = new XMLHttpRequest();
+		rawFile.open("GET", file, false);
+		rawFile.onreadystatechange = function () {
+			if (rawFile.readyState == 4) {
+				if (rawFile.status == 200) {
+					var allText = rawFile.responseText;
+					txt = allText;
+				}
+			}
+		}
+		rawFile.send(null);
+	}
+
+	// using the input text, upate the map (name -> # of wins)
+	function insertMap() {
+		var start = 0;
+		var last = 0;
+		for (var i = 0; i < txt.length; i++) {
+			if (txt[i] == '@') {
+				for (var j = i; j < txt.length; j++){
+					if (txt[j] == '\n') { // unlink the image_list text files, this uses new line to differentiate the names
+						score.set(txt.substring(start, i), txt.substring(i+1, j));
+						start = j+1;
+						break;
+					}
+				}
+				last = i;
+			}
+		}
+		score.set(txt.substring(start, last), txt.substring(last+1, txt.length));
+		if (score.size == 1) {
+			score.delete("");
+		}
+	}
+
+	// this function loads as soon as the page loads
+	function loadScores() {
+		document.getElementById('TOPIC').innerHTML 
+	        = 'Rank of ' + localStorage.getItem("topic");
+
+		// get the name of the count txt from the local storage
+		var text = localStorage.getItem("topic") + ".txt";
+
+		// read the text file with the name and parse it 
+		readTxt("../score_map/"+text);
+		// update map
+		insertMap();
+
+		console.log(score);
+		if (score.size == 0) {
+			document.getElementById("message").innerHTML += "No Game Result";
+		}
+		else {
+			let curr_rank = 1;
+			let total = 0;
+			for (let [_, value] of score) {
+				total += Number(value);
+			}
+			document.getElementById('TOTAL').innerHTML 
+	        = 'Total Participants : ' + total;
+			// iterate the map to print the result in the html 
+			let text1 = "";
+			let text2 = "";
+			let text3 = "";
+			text1 = '<table style="width:80%; margin-left: 10%; margin-right: 10%">\
+						<tr>\
+							<th style="text-align:left">Rank</th>\
+							<th style="text-align:center">Items</th>\
+							<th style="text-align:left">Win Rates</th>\
+						</tr>';
+			for (let [key, value] of score) {
+				var temp = "../sets/"+ localStorage.getItem("topic") +"/" + key;
+				let percentage = Number((100*(value/total)).toFixed(2));
+				text2 += 
+				'<tr>\
+					<td style="text-align:left">'+ curr_rank +'</td>\
+					<td style="text-align:center">\
+						<img src=' + temp + ' width="' + 5*percentage + '" height="' + 5*percentage + '"></img></td>\
+					<td style="text-align:left">'+ percentage + '%</td>\
+				 </tr>';
+				 curr_rank += 1;
+			}
+			text3 = '</table>';
+			document.getElementById("rank_list").innerHTML = text1 + text2 + text3;
+
+
+		}
+	}
+
+</script>
+</html>

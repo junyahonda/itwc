@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+<head>
+	<title>Front Page</title>
+	<div class="title">
+		<h1>Welcome to Ideal Type World Cup</h1>
+	</div>
+
+	<link rel="stylesheet" href="css/front.css">
+</head>
+<body onload="loadTopic()">
+	<div class="intro">
+		<p>
+			Please select a category or create category before start a game.
+		</p>
+		<p>
+			You will see two pictures at the same time. Choose one that you like most!
+		</p>
+	</div>
+	<div class="select">
+		<p>
+			<label for="topic"> Choose a topic:</label>
+			<select name="topic" id="topic" onload="initTopic()" onchange="getTopic()">
+				<option>Select...</option>
+			</select>
+		</p>
+	</div>
+	<div class="button_container">
+		<p>
+			<button class="buttons" onclick="checkTopicValidity()">Start</button>
+			<button class="buttons" onclick="window.location.href='html/create.html'">Create Your Own</button>
+			<button class="buttons" onclick="checkRankValidity()">Rank</button>
+		</p>
+	</div>
+
+</body>
+</div>
+<script>
+	function initTopic() {
+		var e = document.getElementById("topic");
+		var selected = e.options[e.selectedIndex].value;
+		console.log(selected);
+		localStorage.setItem("topic", selected);
+	}
+	function getTopic() {
+		var e = document.getElementById("topic");
+		var selected = e.options[e.selectedIndex].value;
+		console.log(selected);
+		localStorage.setItem("topic", selected);
+	}
+
+	var txt = "";
+	function readTxt(file) {
+		var rawFile = new XMLHttpRequest();
+		rawFile.open("GET", file, false);
+		rawFile.onreadystatechange = function () {
+			if (rawFile.readyState == 4) {
+				if (rawFile.status == 200) {
+					var allText = rawFile.responseText;
+					txt = allText;
+				}
+			}
+		}
+		rawFile.send(null)
+	}
+	function makeList() {
+		var topic_list = [];
+		var start = 0;
+		for (var i = 0; i < txt.length; i++){
+			if (txt[i] == '\n') {
+				topic_list.push(txt.substring(start, i));
+				start = i+1;
+			}
+		}
+		topic_list.push(txt.substring(start, txt.length));
+		return topic_list;
+	}
+	function loadTopic() {
+		readTxt("./topics.txt");
+		var topic_list = makeList();
+		var select = document.getElementById("topic");
+		for (var i = 0; i < topic_list.length; i++) {
+			var option = document.createElement("option");
+			option.text = topic_list[i];
+			option.value = topic_list[i];
+			select.appendChild(option);
+		}
+	}
+
+
+	function checkTopicValidity(){
+		var e = document.getElementById("topic");
+		var selected = e.options[e.selectedIndex].value;
+		if(selected == "Select..."){
+			window.alert("Please choose a topic");
+  		}
+  		else{
+  			window.location.href='html/main.html';
+  		}
+	}
+
+	function checkRankValidity(){
+		var e = document.getElementById("topic");
+		var selected = e.options[e.selectedIndex].value;
+		if(selected == "Select..."){
+			window.alert("Please choose a topic");
+  		}
+  		else{
+  			window.location.href='html/rank.html'
+  		}
+	}
+</script>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+	<head>
+		<title>Main page</title>
+		<h1 class="title">Winner!!</h1>
+		<link rel="stylesheet" href="../css/lastpick.css">
+	</head>
+	<body onload="loadImage()" >
+		<div>
+			<p id="pics"></p>
+		</div>
+		<button type="button" class="button" onclick="cleanLocalStorage()">Home</button>
+		<button type="button" class="button" onclick="window.location.href='/itwc/html/rank.html'">Rank</button>
+	</body>
+</div>
+<script>
+	function loadImage(){
+		var name=localStorage.getItem("file");
+		var text = localStorage.getItem("topic");
+
+		let index = name.indexOf('/');
+		let getOnlyFile = name.substring(index+1,name.length);
+
+		// eg.   /winner/Fruit/21.jpg
+		var winnerUrl = "/itwc/winner/" + text + "/" + getOnlyFile;
+		// this is just for server side. More efficient to use GET than POST
+		var rawFile = new XMLHttpRequest();
+		rawFile.open("GET", winnerUrl, false);
+		rawFile.send(null);
+
+
+		var x = document.createElement("IMG");
+		x.setAttribute("width", "50%");
+		x.setAttribute("src", '../sets/' + name);
+		x.setAttribute("class", "option");
+		document.getElementById("pics").appendChild(x);
+	}
+	// if this line is not added, when coming back the first page from
+	// the last winner page, the previously saved topic will be used.
+	// so it should be also reset as well when going back to home.
+	function cleanLocalStorage(){
+		localStorage.clear();
+		window.location.href='/itwc/';
+	}
+
+
+
+
+</script>
+</html>
